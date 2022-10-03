@@ -25,7 +25,15 @@ const getCountryData = function (country) {
 		.then(function ([data]) {
 			console.log(data);
 			renderCountry(data);
-		});
+			return fetch(`https://restcountries.com/v3.1/name/${data.borders[5]}`);
+		})
+		.then(function (resolve) {
+			return resolve.json();
+		})
+		.then(function ([data]) {
+			console.log(data);
+			renderCountry(data, "neighbour");
+		})
 };
 getCountryData("bharat");
 
