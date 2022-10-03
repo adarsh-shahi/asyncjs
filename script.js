@@ -1,6 +1,6 @@
 const countriesContainer = document.querySelector(".countries");
 
-const renderCountry = function (data, classname = '') {
+const renderCountry = function (data, classname = "") {
 	const html = `<article class="country ${classname}">
   <img class="country__img" src="${data.flags.png}" />
   <div class="country__data">
@@ -16,55 +16,66 @@ const renderCountry = function (data, classname = '') {
 	countriesContainer.style.opacity = 1;
 };
 
-const getCountryAndNeighbour = function (country) {
-	const request = new XMLHttpRequest();
-	request.open("GET", `https://restcountries.com/v3.1/name/${country}`);
-	request.send();
-
-	request.addEventListener("load", function () {
-		const [data] = JSON.parse(this.responseText);
-		console.log(data);
-		renderCountry(data);
-
-		const [neighbour] = data.borders;
-		if (!neighbour) return;
-		console.log(neighbour);
-
-		const request2 = new XMLHttpRequest();
-		request2.open("GET", `https://restcountries.com/v2/alpha/${neighbour}`);
-		request2.send();
-
-		request2.addEventListener("load", function () {
-			const data2 = JSON.parse(this.responseText);
-			console.log(data2);
-			renderCountry(data2, 'neighbour');
-		}); 
-	});
+const getCountryData = function (country) {
+	fetch(`https://restcountries.com/v3.1/name/${country}`)
+		.then(function (response) {
+			console.log(response);
+			return response.json();
+		})
+		.then(function ([data]) {
+			console.log(data);
+			renderCountry(data);
+		});
 };
- 
-getCountryAndNeighbour("bharat");
-// getCountryAndNeighbour("usa");
-// getCountryAndNeighbour("portugal");
+getCountryData("bharat");
 
+// // const callInSetOut = function(){
+// // 	console.log(`sike`);
+// // }
 
-setTimeout(() => {
-	console.log(`1 sec passed`);
-	setTimeout(() => {
-		console.log(`2 sec passed`);
-		setTimeout(() => {
-			console.log(`3 sec passed`);
-			setTimeout(() => {
-				console.log(`4 sec passed`);
-				setTimeout(() => {
-					console.log(`5 sec passed`);
-					setTimeout(() => {
-						console.log(`6 sec passed`);
-						setTimeout(() => {
-							console.log(`7 sec passed`);
-						}, 1000)
-					}, 1000)
-				}, 1000)
-			}, 1000)
-		}, 1000)
-	}, 1000)
-}, 1000)
+// // setTimeout(callInSetOut, 4000);
+
+// // const goodDay = function(hey){
+// // 	console.log(`came in hey`);
+// // 	hey()
+// // }
+
+// // goodDay(function() {
+// // 	console.log(`SIghhhhhhhhhhhh`);
+// // })
+
+// // console.log(`last last`);
+
+// // Promises
+
+// const promiseMe = new Promise(function(resolve, reject){
+//   resolve('okay')
+//   // reject('no')
+// })
+
+// console.log(promiseMe);
+
+// const ans = promiseMe.then(
+//   (result, error) => {
+//     console.log(result);
+//     return result;
+//   }
+// ).then((resolve, reject) => {
+//   console.log(resolve);
+//   return resolve;
+// }).catch(error => {
+//   console.log(error);
+// })
+// console.log(ans);
+
+// function job() {
+//   return new Promise((resolve, reject) => {
+//     setTimeout(() => {
+//            resolve('hello world')
+//       }, 2000)
+//   })
+// }
+
+// job().then(result => {
+//   console.log(result);
+// })
