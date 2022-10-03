@@ -26,14 +26,17 @@ const getCountryData = function (country) {
 	fetch(`https://restcountries.com/v3.1/name/${country}`)
 		.then(function (response) {
 			console.log(response);
+      if(!response.ok) throw new Error(`cannot found country ${response.status}`)
 			return response.json();
 		})
 		.then(function ([data]) {
 			console.log(data);
 			renderCountry(data);
-			return fetch(`https://restcountries.com/v3.1/name/${data.borders[5]}`);
+      const neighbour = 'adafdst' //data.borders[5];
+			return fetch(`https://restcountries.com/v3.1/name/${neighbour}`);
 		})
 		.then(function (resolve) {
+      if(!resolve.ok) throw new Error(`cannot found country ${resolve.status}`)
 			return resolve.json();
 		})
 		.then(function ([data]) {
@@ -41,7 +44,7 @@ const getCountryData = function (country) {
 			renderCountry(data, "neighbour");
 		})
     .catch(err => {
-      renderError( `Something went wrong ${err.message}`)
+      renderError( `Something went wrong: ${err.message}`)
     })
     .finally(() => {
       countriesContainer.style.opacity = 1;
