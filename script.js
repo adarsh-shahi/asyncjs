@@ -1,10 +1,10 @@
-const btn = document.querySelector('.btn-country')
+const btn = document.querySelector(".btn-country");
 const countriesContainer = document.querySelector(".countries");
 
-const renderError = function(msg){
-  countriesContainer.insertAdjacentText('beforeend', msg)
-  // countriesContainer.style.opacity = 1
-}
+const renderError = function (msg) {
+	countriesContainer.insertAdjacentText("beforeend", msg);
+	// countriesContainer.style.opacity = 1
+};
 
 const renderCountry = function (data, classname = "") {
 	const html = `<article class="country ${classname}">
@@ -22,38 +22,69 @@ const renderCountry = function (data, classname = "") {
 	// countriesContainer.style.opacity = 1;
 };
 
+const getJSON = function (url, errorMsg = "Something went wrong") {
+	return fetch(url).then((response) => {
+		if (!response.ok) throw new Error(`${errorMsg} ${response.status}`);
+		return response.json();
+	});
+};
 const getCountryData = function (country) {
-	fetch(`https://restcountries.com/v3.1/name/${country}`)
-		.then(function (response) {
-			console.log(response);
-      if(!response.ok) throw new Error(`cannot found country ${response.status}`)
-			return response.json();
-		})
+	getJSON(`https://restcountries.com/v3.1/name/${country}`, "Country not found")
 		.then(function ([data]) {
 			console.log(data);
 			renderCountry(data);
-      const neighbour = 'adafdst' //data.borders[5];
-			return fetch(`https://restcountries.com/v3.1/name/${neighbour}`);
-		})
-		.then(function (resolve) {
-      if(!resolve.ok) throw new Error(`cannot found country ${resolve.status}`)
-			return resolve.json();
+			const neighbour = data.borders[5];
+      console.log(neighbour);
+      if(!neighbour) throw new Error(`No Neighbour Found`)
+			return getJSON(
+				`https://restcountries.com/v3.1/name/${neighbour}`,
+				"Country not found"
+			);
 		})
 		.then(function ([data]) {
 			console.log(data);
 			renderCountry(data, "neighbour");
 		})
-    .catch(err => {
-      renderError( `Something went wrong: ${err.message}`)
-    })
-    .finally(() => {
-      countriesContainer.style.opacity = 1;
-    })
+		.catch((err) => {
+			renderError(`Something went wrong: ${err.message}`);
+		})
+		.finally(() => {
+			countriesContainer.style.opacity = 1;
+		});
 };
 
-btn.addEventListener('click', function() {
-  getCountryData("bharat");
-})
+// const getCountryData = function (country) {
+// 	fetch(`https://restcountries.com/v3.1/name/${country}`)
+// 		.then(function (response) {
+// 			console.log(response);
+//       if(!response.ok) throw new Error(`cannot found country ${response.status}`)
+// 			return response.json();
+// 		})
+// 		.then(function ([data]) {
+// 			console.log(data);
+// 			renderCountry(data);
+//       const neighbour = 'adafdst' //data.borders[5];
+// 			return fetch(`https://restcountries.com/v3.1/name/${neighbour}`);
+// 		})
+// 		.then(function (resolve) {
+//       if(!resolve.ok) throw new Error(`cannot found country ${resolve.status}`)
+// 			return resolve.json();
+// 		})
+// 		.then(function ([data]) {
+// 			console.log(data);
+// 			renderCountry(data, "neighbour");
+// 		})
+//     .catch(err => {
+//       renderError( `Something went wrong: ${err.message}`)
+//     })
+//     .finally(() => {
+//       countriesContainer.style.opacity = 1;
+//     })
+// };
+
+btn.addEventListener("click", function () {
+	getCountryData("bharat");
+});
 
 // // const callInSetOut = function(){
 // // 	console.log(`sike`);
