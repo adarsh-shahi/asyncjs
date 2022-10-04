@@ -34,8 +34,8 @@ const getCountryData = function (country) {
 			console.log(data);
 			renderCountry(data);
 			const neighbour = data.borders[5];
-      console.log(neighbour);
-      if(!neighbour) throw new Error(`No Neighbour Found`)
+			console.log(neighbour);
+			if (!neighbour) throw new Error(`No Neighbour Found`);
 			return getJSON(
 				`https://restcountries.com/v3.1/name/${neighbour}`,
 				"Country not found"
@@ -156,18 +156,26 @@ TEST COORDINATES 2: -33.933, 18.474
 GOOD LUCK 😀
 */
 
-const API_KEY = `b71818fe43d18460911d1f62755a34ff`
-const ipAddress = `134.201.250.155`
+const API_KEY = `b71818fe43d18460911d1f62755a34ff`;
+const ipAddress = `153.65.8.20`;
 
-const URL = `http://api.ipstack.com/${ipAddress}?access_key=${API_KEY}`
+const URL = `http://api.ipstack.com/${ipAddress}?access_key=${API_KEY}`;
 
-const whereAmI = function(){
-	fetch(`${URL}`).then(response => {
-		return response.json();
-	})
-	.then(data => {
-		console.log(data);
-	})
-}
+const whereAmI = function () {
+	fetch(`${URL}`)
+		.then((response) => {
+			return response.json();
+		})
+		.then((data) => {
+		
+			if (data.success === false) throw new Error(`${data.error.info}`);
 
-whereAmI(40.7831, -73.9712)
+			console.log(`You are in ${data.city}, ${data.country_name}`);
+			console.log(data);
+		})
+		.catch((err) => {
+			console.log(`Something went wrong ${err.message}`);
+		});
+};
+
+whereAmI(40.7831, -73.9712);
