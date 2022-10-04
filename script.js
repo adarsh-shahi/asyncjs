@@ -33,7 +33,7 @@ const getCountryData = function (country) {
 		.then(function ([data]) {
 			console.log(data);
 			renderCountry(data);
-			const neighbour = data.borders[5];
+			const neighbour = data.borders[0];
 			console.log(neighbour);
 			if (!neighbour) throw new Error(`No Neighbour Found`);
 			return getJSON(
@@ -171,10 +171,11 @@ const whereAmI = function () {
 			if (data.success === false) throw new Error(`${data.error.info}`);
 
 			console.log(`You are in ${data.city}, ${data.country_name}`);
+			getCountryData(data.country_name);
 			console.log(data);
 		})
 		.catch((err) => {
-			console.log(`Something went wrong ${err.message}`);
+			renderError(`Something went wrong ${err.message}`)
 		});
 };
 
