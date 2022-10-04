@@ -82,9 +82,9 @@ const getCountryData = function (country) {
 //     })
 // };
 
-btn.addEventListener("click", function () {
-	getCountryData("bharat");
-});
+// btn.addEventListener("click", function () {
+// 	getCountryData("bharat");
+// });
 
 // // const callInSetOut = function(){
 // // 	console.log(`sike`);
@@ -156,7 +156,18 @@ TEST COORDINATES 2: -33.933, 18.474
 GOOD LUCK 😀
 */
 
-const whereAmI = function(lat, lan){
+const API_KEY = `b71818fe43d18460911d1f62755a34ff`
+const ipAddress = `134.201.250.155`
 
+const URL = `http://api.ipstack.com/${ipAddress}?access_key=${API_KEY}`
+
+const whereAmI = function(){
+	fetch(`${URL}`).then(response => {
+		return response.json();
+	})
+	.then(data => {
+		console.log(data);
+	})
 }
 
+whereAmI(40.7831, -73.9712)
