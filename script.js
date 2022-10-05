@@ -209,3 +209,22 @@ wait(2)
 	.then(() => {
 		console.log(`I waited for 3 seconds`);
 	});
+
+	// Get current position of user
+	
+
+	const getPosition = function() {
+		return new Promise((resolve, reject) => {
+			navigator.geolocation.getCurrentPosition(
+				position => resolve(position),
+				err => reject(err)
+			)
+		})
+	}
+
+	getPosition().then(response => {
+		console.log(response);
+	})
+	.catch(err => {
+		console.log(err);
+	})
