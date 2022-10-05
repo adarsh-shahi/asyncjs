@@ -156,30 +156,6 @@ TEST COORDINATES 2: -33.933, 18.474
 GOOD LUCK 😀
 */
 
-const API_KEY = `b71818fe43d18460911d1f62755a34ff`;
-const ipAddress = `153.65.8.20`;
-
-const URL = `http://api.ipstack.com/${ipAddress}?access_key=${API_KEY}`;
-
-const whereAmI = function () {
-	fetch(`${URL}`)
-		.then((response) => {
-			return response.json();
-		})
-		.then((data) => {
-			if (data.success === false) throw new Error(`${data.error.info}`);
-
-			console.log(`You are in ${data.city}, ${data.country_name}`);
-			getCountryData(data.country_name);
-			console.log(data);
-		})
-		.catch((err) => {
-			renderError(`Something went wrong ${err.message}`);
-		});
-};
-
-whereAmI(40.7831, -73.9712);
-
 // const promise = new Promise(function (resolve, reject) {
 // 	// resolve(`hurray`);
 // 	reject(`sike`);
@@ -212,14 +188,14 @@ const wait = function (seconds) {
 
 // Get current position of user
 
-// const getPosition = function () {
-// 	return new Promise((resolve, reject) => {
-// 		navigator.geolocation.getCurrentPosition(
-// 			(position) => resolve(position),
-// 			(err) => reject(err)
-// 		);
-// 	});
-// };
+const getPosition = function () {
+	return new Promise((resolve, reject) => {
+		navigator.geolocation.getCurrentPosition(
+			(position) => resolve(position),
+			(err) => reject(err)
+		);
+	});
+};
 
 // let lat = "";
 // let lan = "";
@@ -244,10 +220,9 @@ const wait = function (seconds) {
 // 	.catch((err) => {
 // 		console.log(err);
 // 		renderError(`Something went wrong ${err.message}`);
-// 	}); 
+// 	});
 
-
-	// Coding Challenge #2
+// Coding Challenge #2
 
 /* 
 Build the image loading functionality that I just showed you on the screen.
@@ -269,47 +244,59 @@ TEST DATA: Images in the img folder. Test the error handler by passing a wrong i
  tools Network tab, otherwise images load too fast.
 GOOD LUCK 😀
 */
-const imageContainer = document.querySelector('.images')
-let img = ''
+const imageContainer = document.querySelector(".images");
+let img = "";
 
-const createImage = function(imgPath){
+const createImage = function (imgPath) {
 	return new Promise((resolve, reject) => {
-		img = document.createElement('img')
-		img.src = imgPath
-		img.addEventListener('load', () => {
-			imageContainer.insertAdjacentElement('beforeend', img)
+		img = document.createElement("img");
+		img.src = imgPath;
+		img.addEventListener("load", () => {
+			imageContainer.insertAdjacentElement("beforeend", img);
 			resolve(img);
-		})
-		img.addEventListener('error', () => {
-			reject(new Error(`image not found`))
-		})
-	})
-}
+		});
+		img.addEventListener("error", () => {
+			reject(new Error(`image not found`));
+		});
+	});
+};
 
-let currentImg = ''
+let currentImg = "";
 
-createImage('./img-1.jpg')
-.then((ele) => {
-	currentImg = ele
-	console.log(`Image 1 loaded`);
-	return wait(2)
-})
-.then(() => {
-	currentImg.style.display = 'none'
-	return createImage('./img-2.jpg')
-})
-.then((ele) => {
-	currentImg = ele
-	console.log(`Image 2 loaded`);
-	// currentImg.style.display = 'block'
-	return wait(2);
-})
-.then(() => {
-	currentImg.style.display = 'none'
-})
-.catch(err => {
-	console.log(`Something went wrong ${err.message}`);
-}) 
+// getPosition()
+// 	.then((response) => {
+// 		lat = response.coords.latitude;
+// 		lan = response.coords.longitude;
+// 		console.log(response);
+// 		return fetch(`https://geocode.xyz/${lat},${lan}?geoit=json`);
+// 	})
+// 	.then((response) => {
+// 		if (!response.ok)
+// 			throw new Error(`Problem with geocoding ${response.status}`);
+// 		return response.json();
+// 	})
+// 	.then((data) => {
+// 		console.log(`You are in ${data.city}, ${data.state}, ${data.country}`);
+// 		getCountryData(data.country);
+// 		console.log(data);
+// 	})
+// 	.catch((err) => {
+// 		console.log(err);
+// 		renderError(`Something went wrong ${err.message}`);
+// 	});
 
+const whereAmI = async function () {
+	const pos = await getPosition();
+	const { latitude: lat, longitude: lan } = pos.coords;
+	const response = await fetch(`https://geocode.xyz/${lat},${lan}?geoit=json`);
+	const data = await response.json();
+	console.log(data);
+	// if (data) {
+		console.log(`You are in ${data.city}, ${data.state}, ${data.country}`);
+		getCountryData(data.country);
+	// } else {
+	// 	renderError(`Something went wrong ${err.message}`);
+	// }
+};
 
-
+whereAmI()
