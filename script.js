@@ -307,13 +307,22 @@ const whereAmI = async function () {
 		throw err;
 	}
 };
-whereAmI()
-	.then((response) => {
-		console.log(`Noice you are in ${response}`);
-	})
-	.catch((err) => {
+// whereAmI()
+// 	.then((response) => {
+// 		console.log(`Noice you are in ${response}`);
+// 	})
+// 	.catch((err) => {
+// 		console.error(`Return catch ${err}`);
+// 	})
+// 	.finally(() => {
+// 		console.log(`Finally finished`);
+// 	});
+
+(async () => {
+	try {
+		const data = await whereAmI();
+		console.log(`Noice you are in ${data}`);
+	} catch (err) {
 		console.error(`Return catch ${err}`);
-	})
-	.finally(() => {
-		console.log(`Finally finished`);
-	});
+	}
+})();
