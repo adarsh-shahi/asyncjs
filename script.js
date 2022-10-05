@@ -180,18 +180,18 @@ const whereAmI = function () {
 
 whereAmI(40.7831, -73.9712);
 
-const promise = new Promise(function (resolve, reject) {
-	// resolve(`hurray`);
-	reject(`sike`);
-});
+// const promise = new Promise(function (resolve, reject) {
+// 	// resolve(`hurray`);
+// 	reject(`sike`);
+// });
 
-promise
-	.then((response) => {
-		console.log(response);
-	})
-	.catch((err) => {
-		console.log(err);
-	});
+// promise
+// 	.then((response) => {
+// 		console.log(response);
+// 	})
+// 	.catch((err) => {
+// 		console.log(err);
+// 	});
 
 // Promisfying setTimeout()
 
@@ -201,14 +201,14 @@ const wait = function (seconds) {
 	});
 };
 
-wait(2)
-	.then(() => {
-		console.log(`I waited for 2 seconds`);
-		return wait(3);
-	})
-	.then(() => {
-		console.log(`I waited for 3 seconds`);
-	});
+// wait(2)
+// 	.then(() => {
+// 		console.log(`I waited for 2 seconds`);
+// 		return wait(3);
+// 	})
+// 	.then(() => {
+// 		console.log(`I waited for 3 seconds`);
+// 	});
 
 // Get current position of user
 
@@ -270,10 +270,11 @@ TEST DATA: Images in the img folder. Test the error handler by passing a wrong i
 GOOD LUCK 😀
 */
 const imageContainer = document.querySelector('.images')
+let img = ''
 
 const createImage = function(imgPath){
 	return new Promise((resolve, reject) => {
-		const img = document.createElement('img')
+		img = document.createElement('img')
 		img.src = imgPath
 		img.addEventListener('load', () => {
 			imageContainer.insertAdjacentElement('beforeend', img)
@@ -285,4 +286,30 @@ const createImage = function(imgPath){
 	})
 }
 
+let currentImg = ''
+
 createImage('./img-1.jpg')
+.then((ele) => {
+	currentImg = ele
+	console.log(`Image 1 loaded`);
+	return wait(2)
+})
+.then(() => {
+	currentImg.style.display = 'none'
+	return createImage('./img-2.jpg')
+})
+.then((ele) => {
+	currentImg = ele
+	console.log(`Image 2 loaded`);
+	// currentImg.style.display = 'block'
+	return wait(2);
+})
+.then(() => {
+	currentImg.style.display = 'none'
+})
+.catch(err => {
+	console.log(`Something went wrong ${err.message}`);
+}) 
+
+
+
