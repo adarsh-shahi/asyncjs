@@ -171,8 +171,6 @@ GOOD LUCK 😀
 
 // Promisfying setTimeout()
 
-
-
 // wait(2)
 // 	.then(() => {
 // 		console.log(`I waited for 2 seconds`);
@@ -315,14 +313,14 @@ const whereAmI = async function () {
 // 		console.log(`Finally finished`);
 // 	});
 
-(async () => {
-	try {
-		const data = await whereAmI();
-		console.log(`Noice you are in ${data}`);
-	} catch (err) {
-		console.error(`Return catch ${err}`);
-	}
-})();
+// (async () => {
+// 	try {
+// 		const data = await whereAmI();
+// 		console.log(`Noice you are in ${data}`);
+// 	} catch (err) {
+// 		console.error(`Return catch ${err}`);
+// 	}
+// })();
 
 // Running promises in parallel
 
@@ -332,16 +330,15 @@ const get3Countries = async (c1, c2, c3) => {
 	// const data3 = await getJSON(`https://restcountries.com/v3.1/name/${c3}`, "Country not found");
 	// console.log([data1[0].capital[0], data2[0].capital[0], data3[0].capital[0]]);
 
-
 	// Promise.all() is like short circuiting if one promise fails then every promise fails
 	const data = await Promise.all([
 		getJSON(`https://restcountries.com/v3.1/name/${c1}`),
 		getJSON(`https://restcountries.com/v3.1/name/${c2}`),
 		getJSON(`https://restcountries.com/v3.1/name/${c3}`),
 	]);
-	const capitalCities = data.map(d => {
-		return d[0].capital[0]
-	}) 
+	const capitalCities = data.map((d) => {
+		return d[0].capital[0];
+	});
 	console.log(capitalCities);
 };
 
@@ -370,13 +367,36 @@ function.
 GOOD LUCK 😀
 */
 
-const loadNPause = async function(){
-	let currentImage = await createImage('./img-1.jpg')
-	await wait(2);
-	currentImage.style.display = 'none'
-	currentImage = await createImage('./img-2.jpg')
-	await wait(2);
-	currentImage.style.display = 'none'
-}
+const loadNPause = async function () {
+	try {
+		let currentImage = await createImage("./img-1.jpg");
+		await wait(2);
+		currentImage.style.display = "none";
+		currentImage = await createImage("./img-2.jpg");
+		await wait(2);
+		currentImage.style.display = "none";
+	} catch (err) {
+		console.log(err);
+	}
+};
 
-loadNPause()
+loadNPause();
+
+console.log(`*************`);
+const loadAll = async function (imgArr) {
+	try {
+		const imgs = imgArr.map(async (img) => {
+			return await createImage(img);  // returns a promise
+		});
+		console.log(imgs);
+		const imgsEL = await Promise.all(imgs);  // get setteled value from static method
+		console.log(imgsEL);
+		imgsEL.forEach(img => {
+			img.classList.add('parallel')
+		})
+	} catch (err) {
+		console.log(err);
+	}
+};
+
+loadAll(["img-1.jpg", "img-2.jpg", "img-3.jpg"]);
