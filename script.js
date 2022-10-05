@@ -285,6 +285,7 @@ let currentImg = "";
 // 		renderError(`Something went wrong ${err.message}`);
 // 	});
 
+// async function always returns promise
 const whereAmI = async function () {
 	try {
 		const pos = await getPosition();
@@ -292,14 +293,27 @@ const whereAmI = async function () {
 		const response = await fetch(
 			`https://geocode.xyz/${lat},${lan}?geoit=json`
 		);
-		if(!response.ok) throw new Error(`Cannot find country`)
+		console.log(response.ok);
+		if (!response.ok) throw new Error(`Cannot find country`);
+
 		const data = await response.json();
-		console.log(data);
-		console.log(`You are in ${data.city}, ${data.state}, ${data.country}`);
+		console.log("came here");
 		getCountryData(data.country);
+		return `You are in ${data.city}, ${data.state}, ${data.country}`;
 	} catch (err) {
-		console.log(`Something went wrong ${err.message}`);
+		console.log(err.message);
 		renderError(`Something went wrong ${err.message}`);
+		// reject promise returned from async function
+		throw err;
 	}
 };
-whereAmI();
+whereAmI()
+	.then((response) => {
+		console.log(`Noice you are in ${response}`);
+	})
+	.catch((err) => {
+		console.error(`Return catch ${err}`);
+	})
+	.finally(() => {
+		console.log(`Finally finished`);
+	});
