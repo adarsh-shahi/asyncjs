@@ -167,7 +167,6 @@ const whereAmI = function () {
 			return response.json();
 		})
 		.then((data) => {
-		
 			if (data.success === false) throw new Error(`${data.error.info}`);
 
 			console.log(`You are in ${data.city}, ${data.country_name}`);
@@ -175,8 +174,38 @@ const whereAmI = function () {
 			console.log(data);
 		})
 		.catch((err) => {
-			renderError(`Something went wrong ${err.message}`)
+			renderError(`Something went wrong ${err.message}`);
 		});
 };
 
 whereAmI(40.7831, -73.9712);
+
+const promise = new Promise(function (resolve, reject) {
+	// resolve(`hurray`);
+	reject(`sike`);
+});
+
+promise
+	.then((response) => {
+		console.log(response);
+	})
+	.catch((err) => {
+		console.log(err);
+	});
+
+// Promisfying setTimeout()
+
+const wait = function (seconds) {
+	return new Promise((resolve, reject) => {
+		setTimeout(resolve, seconds * 1000);
+	});
+};
+
+wait(2)
+	.then(() => {
+		console.log(`I waited for 2 seconds`);
+		return wait(3);
+	})
+	.then(() => {
+		console.log(`I waited for 3 seconds`);
+	});
