@@ -33,7 +33,7 @@ const getCountryData = function (country) {
 		.then(function ([data]) {
 			console.log(data);
 			renderCountry(data);
-			const neighbour = data.borders[0];
+			const neighbour = data.borders[5];
 			console.log(neighbour);
 			if (!neighbour) throw new Error(`No Neighbour Found`);
 			return getJSON(
@@ -210,21 +210,38 @@ wait(2)
 		console.log(`I waited for 3 seconds`);
 	});
 
-	// Get current position of user
-	
+// Get current position of user
 
-	const getPosition = function() {
-		return new Promise((resolve, reject) => {
-			navigator.geolocation.getCurrentPosition(
-				position => resolve(position),
-				err => reject(err)
-			)
-		})
-	}
+const getPosition = function () {
+	return new Promise((resolve, reject) => {
+		navigator.geolocation.getCurrentPosition(
+			(position) => resolve(position),
+			(err) => reject(err)
+		);
+	});
+};
 
-	getPosition().then(response => {
+let lat = "";
+let lan = "";
+
+getPosition()
+	.then((response) => {
+		lat = response.coords.latitude;
+		lan = response.coords.longitude;
 		console.log(response);
+		return fetch(`https://geocode.xyz/${lat},${lan}?geoit=json`);
 	})
-	.catch(err => {
+	.then((response) => {
+		if (!response.ok)
+			throw new Error(`Problem with geocoding ${response.status}`);
+		return response.json();
+	})
+	.then((data) => {
+		console.log(`You are in ${data.city}, ${data.state}, ${data.country}`);
+		getCountryData(data.country);
+		console.log(data);
+	})
+	.catch((err) => {
 		console.log(err);
-	})
+		renderError(`Something went wrong ${err.message}`);
+	});
