@@ -286,17 +286,20 @@ let currentImg = "";
 // 	});
 
 const whereAmI = async function () {
-	const pos = await getPosition();
-	const { latitude: lat, longitude: lan } = pos.coords;
-	const response = await fetch(`https://geocode.xyz/${lat},${lan}?geoit=json`);
-	const data = await response.json();
-	console.log(data);
-	// if (data) {
+	try {
+		const pos = await getPosition();
+		const { latitude: lat, longitude: lan } = pos.coords;
+		const response = await fetch(
+			`https://geocode.xyz/${lat},${lan}?geoit=json`
+		);
+		if(!response.ok) throw new Error(`Cannot find country`)
+		const data = await response.json();
+		console.log(data);
 		console.log(`You are in ${data.city}, ${data.state}, ${data.country}`);
 		getCountryData(data.country);
-	// } else {
-	// 	renderError(`Something went wrong ${err.message}`);
-	// }
+	} catch (err) {
+		console.log(`Something went wrong ${err.message}`);
+		renderError(`Something went wrong ${err.message}`);
+	}
 };
-
-whereAmI()
+whereAmI();
