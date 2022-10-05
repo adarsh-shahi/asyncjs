@@ -307,6 +307,7 @@ const whereAmI = async function () {
 		throw err;
 	}
 };
+
 // whereAmI()
 // 	.then((response) => {
 // 		console.log(`Noice you are in ${response}`);
@@ -326,3 +327,26 @@ const whereAmI = async function () {
 		console.error(`Return catch ${err}`);
 	}
 })();
+
+// Running promises in parallel
+
+const get3Countries = async (c1, c2, c3) => {
+	// const data1 = await getJSON(`https://restcountries.com/v3.1/name/${c1}`, "Country not found");
+	// const data2 = await getJSON(`https://restcountries.com/v3.1/name/${c2}`, "Country not found");
+	// const data3 = await getJSON(`https://restcountries.com/v3.1/name/${c3}`, "Country not found");
+	// console.log([data1[0].capital[0], data2[0].capital[0], data3[0].capital[0]]);
+
+
+	// Promise.all() is like short circuiting if one promise fails then every promise fails
+	const data = await Promise.all([
+		getJSON(`https://restcountries.com/v3.1/name/${c1}`),
+		getJSON(`https://restcountries.com/v3.1/name/${c2}`),
+		getJSON(`https://restcountries.com/v3.1/name/${c3}`),
+	]);
+	const capitalCities = data.map(d => {
+		return d[0].capital[0]
+	}) 
+	console.log(capitalCities);
+};
+
+get3Countries("india", "portugal", "usa");
