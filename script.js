@@ -381,7 +381,7 @@ const loadNPause = async function () {
 };
 
 loadNPause();
-
+ 
 console.log(`*************`);
 const loadAll = async function (imgArr) {
 	try {
@@ -400,3 +400,8 @@ const loadAll = async function (imgArr) {
 };
 
 loadAll(["img-1.jpg", "img-2.jpg", "img-3.jpg"]);
+
+const jsonStr = `{"name": "adarsh", "age": 20, "male": true}`
+const data = JSON.parse(jsonStr);
+data.name = 'adarsh shahi'
+console.log(JSON.stringify(data));
